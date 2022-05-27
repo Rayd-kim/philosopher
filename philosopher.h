@@ -21,7 +21,10 @@ typedef struct	s_philo
 typedef struct s_all
 {
 	int				num;
-	pthread_mutex_t	*pork;
+	int				philo_num;
+	int				*fork;
+	struct timeval	start;
+	pthread_mutex_t	*mutex_fork;
 	struct s_philo	*philo;
 }		t_all;
 
