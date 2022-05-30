@@ -63,38 +63,78 @@ int	make_philo (t_philo *p, int argc, char *argv[])
 	return (0);
 }
 
+void	check_time(double *time)
+{
+	struct timeval	now;
+
+	gettimeofday (&now, NULL);
+	*time = now.tv_sec + + now.tv_usec * 0.000001;
+}
+
+void	ft_usleep(int spend_time)
+{
+	double	now_time;
+	double	after_time;
+	double	temp;
+
+	check_time(&now_time);
+	check_time(&after_time);
+	temp = spend_time * 0.001;
+	while ((after_time - now_time) <= temp)
+	{
+		usleep (100);
+		check_time(&after_time);
+	}
+}
 
 void	*check_philo(void *data)
 {
 	t_all	*all;
 	int		n;
+	double	now;
+	double	life_time;
+	double	after;
 
+	check_time (&life_time);
+	check_time (&now);
 	all = (t_all *)data;
-	pthread_mutex_lock(all->mutex_fork);
 	n = all->philo_num;
 	while (all->philo[n].life > 0)
 	{
+	pthread_mutex_lock(all->mutex_fork);
 	if (all->philo[n].num == 1)
 	{
 		if (all->fork[n] == 0 && all->fork[all->num - 1] == 0 && all->num > 1)
 		{
 			all->fork[n] = 1;
 			all->fork[all->num - 1] = 1;
-			printf ("%d has taken a fork\n", n + 1);
-			//pthread_mutex_unlock (all->mutex_fork);
-			usleep (all->philo[n].eat_time * 1000);
-			printf ("%d eat the food\n", n + 1);
-		}
-		else if (all->fork[n] == 1 && all->fork[all->num - 1] == 1 && all->num > 1)
-		{
+			check_time (&after);
+			printf ("%d %d has taken a fork\n", (int)((after - now) * 1000), n + 1);
+			pthread_mutex_unlock (all->mutex_fork);
+			ft_usleep (all->philo[0].eat_time);
+			pthread_mutex_lock(all->mutex_fork);
 			all->fork[n] = 0;
 			all->fork[all->num - 1] = 0;
-			//pthread_mutex_unlock (all->mutex_fork);
-			//printf ("%d eat the food\n", n + 1);
+			check_time (&after);
+			printf ("%d %d eat the food\n", (int)((after - now) * 1000), n + 1);
+			check_time (&life_time);
+			pthread_mutex_unlock (all->mutex_fork);
+			ft_usleep (all->philo[0].sleep_time);
+			check_time (&after);
+			printf ("%d %d is sleeping\n", (int)((after - now) * 1000), n + 1);
+			usleep (50);
 		}
-		//else
-		//	printf ("%d is thinking\n", n + 1);
-		//pthread_mutex_unlock (all->mutex_fork);
+		else
+		{
+			check_time (&after);
+			if ( (int)((after - life_time) * 1000) > all->philo[n].life)
+			{
+				printf ("%d %d died\n", (int)((after - now) * 1000), n + 1);
+				break ;
+			}
+			pthread_mutex_unlock (all->mutex_fork);
+		}
+		
 	}
 	else if (all->philo[n].num > 1)
 	{
@@ -102,21 +142,32 @@ void	*check_philo(void *data)
 		{
 			all->fork[n] = 1;
 			all->fork[n - 1] = 1;
-			printf ("%d has taken a fork\n", n + 1);
+			check_time (&after);
+			printf ("%d %d has taken a fork\n", (int)((after - now) * 1000), n + 1);
 			pthread_mutex_unlock (all->mutex_fork);
-			usleep (all->philo[n].eat_time * 1000);
-			printf ("%d eat the food\n", n + 1);
-		}
-		else if (all->fork[n] == 1 && all->fork[n - 1] == 1 && all->num > 1)
-		{
+			ft_usleep (all->philo[0].eat_time);
+			pthread_mutex_lock(all->mutex_fork);
 			all->fork[n] = 0;
 			all->fork[n - 1] = 0;
+			check_time (&after);
+			printf ("%d %d eat the food\n", (int)((after - now) * 1000), n + 1);
+			check_time (&life_time);
 			pthread_mutex_unlock (all->mutex_fork);
-			//printf ("%d eat the food\n", n + 1);
+			ft_usleep (all->philo[0].eat_time);
+			check_time (&after);
+			printf ("%d %d is sleeping\n", (int)((after - now) * 1000), n + 1);
+			usleep (50);
 		}
-		//else
-		//	printf ("%d is thinking\n", n + 1);
-		//pthread_mutex_unlock (all->mutex_fork);
+		else
+		{
+			check_time (&after);
+			if ( (int)((after - life_time) * 1000) > all->philo[n].life)
+			{
+				printf ("%d %d died\n", (int)((after - now) * 1000), n + 1);
+				break ;
+			}
+			pthread_mutex_unlock (all->mutex_fork);
+		}
 	}
 	}
 	return (0);
