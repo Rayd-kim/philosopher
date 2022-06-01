@@ -12,7 +12,7 @@ typedef struct	s_philo
 {
 	pthread_t	tid;
 	int			num;
-	int			life;
+	double		life_time;
 	int			eat_time;
 	int			sleep_time;
 	int			eat_num;
@@ -26,28 +26,19 @@ typedef struct s_all
 	int				philo_num;
 	int				eat_num;
 	int				*fork_num;
-	struct timeval	start;
+	int				life;
+	int				death;
+	double			start;
+	pthread_mutex_t	*write;
 	pthread_mutex_t	*fork;
 	struct s_philo	*philo;
 }		t_all;
 
-/*
-typedef struct	s_list
-{
-	int		*k;
-	int		num;
-	int		left;
-	int		right;
-	struct s_thread	*thread;
-}		t_list;
-
-typedef struct s_thread
-{
-	struct s_list	*list;
-	pthread_mutex_t	*mutex;
-}		t_thread;
-*/
-
-int	ft_atoi(const char *str);
-
+int				ft_atoi(const char *str);
+pthread_mutex_t	*make_fork(t_all *all);
+t_all			*make_all(int argc, char *argv[]);
+int				make_philo (t_philo *p, int argc, char *argv[]);
+void			check_time(double *time);
+void			ft_usleep(int spend_time);
+void			printf_with_time(double start, int philo, char *str, t_all *all);
 #endif
