@@ -73,7 +73,6 @@ t_all	*make_all(int argc, char *argv[])
 	all = (t_all *)malloc(sizeof(t_all));
 	if (all == 0)
 		return (NULL);
-	memset (all, 0, sizeof(t_all));
 	check_time (&all->start);
 	all->philo_num = ft_atoi(argv[1]);
 	all->life = ft_atoi(argv[2]);

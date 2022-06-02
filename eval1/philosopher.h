@@ -40,7 +40,6 @@ typedef struct s_all
 	int				life;
 	int				death;
 	double			start;
-	int				eat_check;
 	pthread_mutex_t	*write;
 	pthread_mutex_t	*fork;
 	struct s_philo	*philo;
