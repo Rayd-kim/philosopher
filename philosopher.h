@@ -53,4 +53,6 @@ void			check_time(double *time);
 void			ft_usleep(int spend_time);
 void			printf_with_time(double start, int philo, \
 				char *str, t_all *all);
+int				error_free(t_all *all);
+int				error_free_thread(t_all *all, int i);
 #endif

@@ -23,7 +23,13 @@ pthread_mutex_t	*make_fork(t_all *all)
 	i = 0;
 	while (i < all->philo_num)
 	{
-		pthread_mutex_init (&fork[i], NULL);
+		if (pthread_mutex_init (&fork[i], NULL) == -1)
+		{
+			while (--i > 0)
+				pthread_mutex_destroy (&fork[i]);
+			free (fork);
+			return (NULL);
+		}
 		i++;
 	}
 	return (fork);
@@ -37,7 +43,8 @@ int	make_philo(t_philo *p, int argc, char *argv[])
 	i = -1;
 	while (++i < argc - 1)
 		arg[i] = ft_atoi(argv[i + 1]);
-	memset (p, 0, sizeof(t_philo) * arg[0]);
+	if (memset (p, 0, sizeof(t_philo) * arg[0]) == NULL)
+		return (1);
 	i = -1;
 	while (++i < arg[0])
 	{
@@ -52,6 +59,12 @@ int	make_philo(t_philo *p, int argc, char *argv[])
 	return (0);
 }
 
+static void	*error_null(t_all *all)
+{
+	free (all);
+	return (NULL);
+}
+
 t_all	*make_all(int argc, char *argv[])
 {
 	t_all			*all;
@@ -63,14 +76,16 @@ t_all	*make_all(int argc, char *argv[])
 	check_time (&all->start);
 	all->philo_num = ft_atoi(argv[1]);
 	all->life = ft_atoi(argv[2]);
-	all->fork = make_fork(all);
 	if (argc == 6)
 		all->eat_num = ft_atoi (argv[5]);
 	p = (t_philo *)malloc(sizeof(t_philo) * all->philo_num);
 	if (p == 0)
-		return (NULL);
+		return (error_null(all));
 	if (make_philo(p, argc, argv) == 1)
-		return (NULL);
+		return (error_null(all));
 	all->philo = p;
+	all->fork = make_fork(all);
+	if (all->fork == NULL)
+		return (error_null(all));
 	return (all);
 }

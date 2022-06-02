@@ -16,7 +16,7 @@ void	check_time(double *time)
 {
 	struct timeval	now;
 
-	if (gettimeofday (&now, NULL) == -1)
+	gettimeofday (&now, NULL);
 	*time = now.tv_sec + now.tv_usec * 0.000001;
 }
 

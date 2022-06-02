@@ -16,19 +16,13 @@ void	end_philo(t_all *all)
 {
 	int	i;
 
-	i = 0;
-	while (i < all->philo_num)
-	{
+	i = -1;
+	while (++i < all->philo_num)
 		pthread_detach (all->philo[i].tid);
-		i++;
-	}
 	free (all->philo);
-	i = 0;
-	while (i < all->philo_num)
-	{
+	i = -1;
+	while (++i < all->philo_num)
 		pthread_mutex_destroy (&all->fork[i]);
-		i++;
-	}
 	pthread_mutex_destroy (all->write);
 	free (all->fork);
 	free (all);
@@ -97,8 +91,8 @@ void	*check_philo(void *data)
 		ft_usleep (all->philo[n].eat_time);
 		check_time (&(all->philo[n].life_time));
 		all->philo[n].eat_num += 1;
-		pthread_mutex_unlock (&(all->fork[all->philo[n].left]));
 		pthread_mutex_unlock (&(all->fork[all->philo[n].right]));
+		pthread_mutex_unlock (&(all->fork[all->philo[n].left]));
 		printf_with_time (all->start, n + 1, "is sleeping\n", all);
 		ft_usleep (all->philo[n].sleep_time);
 		printf_with_time (all->start, n + 1, "is thinking\n", all);
@@ -119,15 +113,14 @@ int	main(int argc, char *argv[])
 		return (1);
 	all->write = &mutex;
 	if (pthread_mutex_init (all->write, NULL) == -1)
-	{
-		error_free (all);
-		return (1);
-	}
+		return (error_free(all));
 	i = -1;
 	while (++i < all->philo_num)
 	{
 		all->num = i;
-		pthread_create (&(all->philo[i].tid), NULL, check_philo, (void *)all);
+		if (pthread_create (&(all->philo[i].tid), NULL, \
+			check_philo, (void *)all) != 0)
+			return (error_free_thread (all, i));
 		usleep (50);
 	}
 	death_check (all);

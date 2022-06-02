@@ -55,24 +55,32 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-void	error_free (t_all *all)
+int	error_free_thread(t_all *all, int i)
 {
-	int	i;
-
-	i = 0;
-	while (i < all->philo_num)
+	while (i > 0)
 	{
 		pthread_detach (all->philo[i].tid);
 		i++;
 	}
 	free (all->philo);
-	i = 0;
-	while (i < all->philo_num)
-	{
+	i = -1;
+	while (++i < all->philo_num)
 		pthread_mutex_destroy (&all->fork[i]);
-		i++;
-	}
 	pthread_mutex_destroy (all->write);
 	free (all->fork);
 	free (all);
+	return (1);
+}
+
+int	error_free(t_all *all)
+{
+	int	i;
+
+	free (all->philo);
+	i = -1;
+	while (++i < all->philo_num)
+		pthread_mutex_destroy (&all->fork[i]);
+	free (all->fork);
+	free (all);
+	return (1);
 }
