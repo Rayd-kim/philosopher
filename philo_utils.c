@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: youskim <youskim@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/02 15:13:49 by youskim           #+#    #+#             */
+/*   Updated: 2022/06/02 15:13:51 by youskim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 static int	result_value(const char *str, int index, int sign)
@@ -43,3 +55,24 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
+void	error_free (t_all *all)
+{
+	int	i;
+
+	i = 0;
+	while (i < all->philo_num)
+	{
+		pthread_detach (all->philo[i].tid);
+		i++;
+	}
+	free (all->philo);
+	i = 0;
+	while (i < all->philo_num)
+	{
+		pthread_mutex_destroy (&all->fork[i]);
+		i++;
+	}
+	pthread_mutex_destroy (all->write);
+	free (all->fork);
+	free (all);
+}

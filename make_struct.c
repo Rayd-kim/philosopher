@@ -1,19 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   make_struct.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: youskim <youskim@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/02 15:13:34 by youskim           #+#    #+#             */
+/*   Updated: 2022/06/02 15:13:38 by youskim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 pthread_mutex_t	*make_fork(t_all *all)
 {
 	pthread_mutex_t	*fork;
 	int				i;
-	int				*fork_num;
 
 	fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * all->philo_num);
 	if (fork == 0)
 		return (NULL);
-	fork_num = (int *)malloc(sizeof(int) * all->philo_num);
-	if (fork_num == 0)
-		return (NULL);
-	memset (fork_num, 0, sizeof(int) * all->philo_num);
-	all->fork_num = fork_num;
 	i = 0;
 	while (i < all->philo_num)
 	{
@@ -21,6 +27,29 @@ pthread_mutex_t	*make_fork(t_all *all)
 		i++;
 	}
 	return (fork);
+}
+
+int	make_philo(t_philo *p, int argc, char *argv[])
+{
+	int	i;
+	int	arg[5];
+
+	i = -1;
+	while (++i < argc - 1)
+		arg[i] = ft_atoi(argv[i + 1]);
+	memset (p, 0, sizeof(t_philo) * arg[0]);
+	i = -1;
+	while (++i < arg[0])
+	{
+		p[i].num = i + 1;
+		check_time (&p[i].life_time);
+		p[i].eat_time = arg[2];
+		p[i].sleep_time = arg[3];
+		p[i].left = (i + 1) % arg[0];
+		p[i].right = i;
+		p[i].eat_num = 0;
+	}
+	return (0);
 }
 
 t_all	*make_all(int argc, char *argv[])
@@ -44,27 +73,4 @@ t_all	*make_all(int argc, char *argv[])
 		return (NULL);
 	all->philo = p;
 	return (all);
-}
-
-int	make_philo (t_philo *p, int argc, char *argv[])
-{
-	int	i;
-	int	arg[5];
-
-	i = -1;
-	while (++i < argc - 1)
-		arg[i] = ft_atoi(argv[i + 1]);
-	memset (p, 0, sizeof(t_philo) * arg[0]);
-	i = -1;
-	while (++i < arg[0])
-	{
-		p[i].num = i + 1;
-		check_time(&p[i].life_time);
-		p[i].eat_time = arg[2];
-		p[i].sleep_time = arg[3];
-		p[i].left = (i + 1) % arg[0];
-		p[i].right = i;
-		p[i].eat_num = 0;
-	}
-	return (0);
 }

@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   time.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: youskim <youskim@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/02 15:13:57 by youskim           #+#    #+#             */
+/*   Updated: 2022/06/02 15:14:05 by youskim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 void	check_time(double *time)
 {
 	struct timeval	now;
 
-	gettimeofday (&now, NULL);
-	*time = now.tv_sec + + now.tv_usec * 0.000001;
+	if (gettimeofday (&now, NULL) == -1)
+	*time = now.tv_sec + now.tv_usec * 0.000001;
 }
 
 void	ft_usleep(int spend_time)
@@ -14,8 +26,8 @@ void	ft_usleep(int spend_time)
 	double	after_time;
 	double	temp;
 
-	check_time(&now_time);
-	check_time(&after_time);
+	check_time (&now_time);
+	check_time (&after_time);
 	temp = spend_time * 0.001;
 	while ((after_time - now_time) <= temp)
 	{

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosopher.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: youskim <youskim@student.42seoul.k>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/02 15:14:52 by youskim           #+#    #+#             */
+/*   Updated: 2022/06/02 15:14:53 by youskim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILOSOPHER_H
 # define PHILOSOPHER_H
 
@@ -8,7 +20,7 @@
 # include <stdlib.h>
 # include <string.h>
 
-typedef struct	s_philo
+typedef struct s_philo
 {
 	pthread_t	tid;
 	int			num;
@@ -25,7 +37,6 @@ typedef struct s_all
 	int				num;
 	int				philo_num;
 	int				eat_num;
-	int				*fork_num;
 	int				life;
 	int				death;
 	double			start;
@@ -37,8 +48,9 @@ typedef struct s_all
 int				ft_atoi(const char *str);
 pthread_mutex_t	*make_fork(t_all *all);
 t_all			*make_all(int argc, char *argv[]);
-int				make_philo (t_philo *p, int argc, char *argv[]);
+int				make_philo(t_philo *p, int argc, char *argv[]);
 void			check_time(double *time);
 void			ft_usleep(int spend_time);
-void			printf_with_time(double start, int philo, char *str, t_all *all);
+void			printf_with_time(double start, int philo, \
+				char *str, t_all *all);
 #endif
