@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosopher.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youskim <youskim@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:53 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/02 15:13:55 by youskim          ###   ########.fr       */
+/*   Updated: 2022/06/03 12:16:53 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	end_philo(t_all *all)
 	free (all);
 }
 
-
 void	death_check(t_all *all)
 {
 	int		i;
@@ -47,7 +46,7 @@ void	death_check(t_all *all)
 				break ;
 			}
 		}
-		if (all->death != 0 || (all->eat_check == all->eat_num && all->eat_num != 0))
+		if (all->death != 0 || (all->eat_check == all->eat_num && all->eat_num != 0))c
 		{
 			end_philo (all);
 			break ;
@@ -65,43 +64,46 @@ void	*check_philo(void *data)
 	n = all->num;
 	if (all->eat_num != 0)
 	{
-	while (all->death == 0 && all->philo[n].eat_num < all->eat_num)
-	{
-		pthread_mutex_lock (&(all->fork[all->philo[n].right]));
-		printf_with_time (all->start, n + 1, "has taken a fork\n", all);
-		pthread_mutex_lock (&(all->fork[all->philo[n].left]));
-		printf_with_time (all->start, n + 1, "has taken a fork\n", all);
-		printf_with_time (all->start, n + 1, "is eating\n", all);
-		ft_usleep (all->philo[n].eat_time);
-		check_time (&(all->philo[n].life_time));
-		all->philo[n].eat_num += 1;
-		pthread_mutex_unlock (&(all->fork[all->philo[n].right]));
-		pthread_mutex_unlock (&(all->fork[all->philo[n].left]));
-		printf_with_time (all->start, n + 1, "is sleeping\n", all);
-		ft_usleep (all->philo[n].sleep_time);
-		printf_with_time (all->start, n + 1, "is thinking\n", all);
-		if (all->philo[n].eat_num == all->eat_num)
-			all->eat_check += 1;
-	}
+		while (all->death == 0 && all->philo[n].eat_num < all->eat_num)
+		{
+			pthread_mutex_lock (&(all->fork[all->philo[n].right]));
+			printf_with_time (all->start, n + 1, "has taken a fork\n", all);
+			pthread_mutex_lock (&(all->fork[all->philo[n].left]));
+			printf_with_time (all->start, n + 1, "has taken a fork\n", all);
+			printf_with_time (all->start, n + 1, "is eating\n", all);
+			ft_usleep (all->philo[n].eat_time);
+			check_time (&(all->philo[n].life_time));
+			all->philo[n].eat_num += 1;
+			pthread_mutex_unlock (&(all->fork[all->philo[n].right]));
+			pthread_mutex_unlock (&(all->fork[all->philo[n].left]));
+			printf_with_time (all->start, n + 1, "is sleeping\n", all);
+			ft_usleep (all->philo[n].sleep_time);
+			printf_with_time (all->start, n + 1, "is thinking\n", all);
+			if (all->philo[n].eat_num == all->eat_num)
+			{
+				all->eat_check += 1;
+				break ;
+			}
+		}
 	}
 	else
 	{
-	while (all->death == 0)
-	{
-		pthread_mutex_lock (&(all->fork[all->philo[n].right]));
-		printf_with_time (all->start, n + 1, "has taken a fork\n", all);
-		pthread_mutex_lock (&(all->fork[all->philo[n].left]));
-		printf_with_time (all->start, n + 1, "has taken a fork\n", all);
-		printf_with_time (all->start, n + 1, "is eating\n", all);
-		ft_usleep (all->philo[n].eat_time);
-		check_time (&(all->philo[n].life_time));
-		all->philo[n].eat_num += 1;
-		pthread_mutex_unlock (&(all->fork[all->philo[n].right]));
-		pthread_mutex_unlock (&(all->fork[all->philo[n].left]));
-		printf_with_time (all->start, n + 1, "is sleeping\n", all);
-		ft_usleep (all->philo[n].sleep_time);
-		printf_with_time (all->start, n + 1, "is thinking\n", all);
-	}
+		while (all->death == 0)
+		{
+			pthread_mutex_lock (&(all->fork[all->philo[n].right]));
+			printf_with_time (all->start, n + 1, "has taken a fork\n", all);
+			pthread_mutex_lock (&(all->fork[all->philo[n].left]));
+			printf_with_time (all->start, n + 1, "has taken a fork\n", all);
+			printf_with_time (all->start, n + 1, "is eating\n", all);
+			ft_usleep (all->philo[n].eat_time);
+			check_time (&(all->philo[n].life_time));
+			all->philo[n].eat_num += 1;
+			pthread_mutex_unlock (&(all->fork[all->philo[n].right]));
+			pthread_mutex_unlock (&(all->fork[all->philo[n].left]));
+			printf_with_time (all->start, n + 1, "is sleeping\n", all);
+			ft_usleep (all->philo[n].sleep_time);
+			printf_with_time (all->start, n + 1, "is thinking\n", all);
+		}
 	}
 	return (0);
 }
@@ -126,6 +128,7 @@ int	main(int argc, char *argv[])
 		all->num = i;
 		if (pthread_create (&(all->philo[i].tid), NULL, \
 			check_philo, (void *)all) != 0)
+			return (error_free_thread (all, i));
 		usleep (50);
 	}
 	death_check (all);

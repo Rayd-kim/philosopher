@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_struct.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youskim <youskim@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:34 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/02 15:13:38 by youskim          ###   ########.fr       */
+/*   Updated: 2022/06/03 11:58:50 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,14 @@ t_all	*make_all(int argc, char *argv[])
 	all = (t_all *)malloc(sizeof(t_all));
 	if (all == 0)
 		return (NULL);
-	memset (all, 0, sizeof(t_all));
 	check_time (&all->start);
 	all->philo_num = ft_atoi(argv[1]);
 	all->life = ft_atoi(argv[2]);
 	if (argc == 6)
 		all->eat_num = ft_atoi (argv[5]);
+	else
+		all->eat_num = 0;
+	all->eat_check = 0;
 	p = (t_philo *)malloc(sizeof(t_philo) * all->philo_num);
 	if (p == 0)
 		return (error_null(all));
