@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosopher.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youskim <youskim@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:14:52 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/02 15:14:53 by youskim          ###   ########.fr       */
+/*   Updated: 2022/06/03 12:53:15 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@ typedef struct s_all
 	int				life;
 	int				death;
 	double			start;
-	int				eat_check;
-	pthread_mutex_t	*write;
+	pthread_mutex_t	write;
 	pthread_mutex_t	*fork;
 	struct s_philo	*philo;
 }		t_all;
@@ -56,4 +55,5 @@ void			printf_with_time(double start, int philo, \
 				char *str, t_all *all);
 int				error_free(t_all *all);
 int				error_free_thread(t_all *all, int i);
+void	printf_died(double start, int philo, char *str);
 #endif

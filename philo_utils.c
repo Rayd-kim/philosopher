@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youskim <youskim@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:49 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/02 15:13:51 by youskim          ###   ########.fr       */
+/*   Updated: 2022/06/11 14:30:56 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	error_free_thread(t_all *all, int i)
 	i = -1;
 	while (++i < all->philo_num)
 		pthread_mutex_destroy (&all->fork[i]);
-	pthread_mutex_destroy (all->write);
+	pthread_mutex_destroy (&(all->write));
 	free (all->fork);
 	free (all);
 	return (1);

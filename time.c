@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youskim <youskim@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:57 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/02 15:14:05 by youskim          ###   ########.fr       */
+/*   Updated: 2022/06/03 12:53:09 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,15 @@ void	printf_with_time(double start, int philo, char *str, t_all *all)
 	double	now;
 
 	check_time (&now);
-	pthread_mutex_lock (all->write);
+	pthread_mutex_lock (&(all->write));
 	printf ("%d %d %s", (int)((now - start) * 1000), philo, str);
-	pthread_mutex_unlock (all->write);
+	pthread_mutex_unlock (&(all->write));
+}
+
+void	printf_died(double start, int philo, char *str)
+{
+	double	now;
+
+	check_time (&now);
+	printf ("%d %d %s", (int)((now - start) * 1000), philo, str);
 }
