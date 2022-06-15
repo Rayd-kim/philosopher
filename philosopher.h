@@ -55,5 +55,5 @@ void			printf_with_time(double start, int philo, \
 				char *str, t_all *all);
 int				error_free(t_all *all);
 int				error_free_thread(t_all *all, int i);
-void	printf_died(double start, int philo, char *str);
+void			printf_died(double start, int philo, char *str);
 #endif

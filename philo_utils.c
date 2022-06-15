@@ -14,20 +14,17 @@
 
 static int	result_value(const char *str, int index, int sign)
 {
-	unsigned long long int	result;
+	int	result;
 
 	result = 0;
+	if (str[index] < '0' || str[index] > '9')
+		return (-1);
 	while (str[index] >= '0' && str[index] <= '9')
 	{
 		result = result * 10 + str[index] - '0';
 		index++;
 	}
-	if (result > 9223372036854775807 && sign == 1)
-		return (-1);
-	else if (result - 1 > 9223372036854775807 && sign == -1)
-		return (0);
-	else
-		return (result * sign);
+	return (result * sign);
 }
 
 int	ft_atoi(const char *str)
@@ -50,7 +47,9 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	if (pm_num > 1)
-		return (0);
+		return (-1);
+	if (sign != 1)
+		return (-1);
 	result = result_value(str, i, sign);
 	return (result);
 }

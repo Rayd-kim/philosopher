@@ -31,7 +31,7 @@ void	ft_usleep(int spend_time)
 	temp = spend_time * 0.001;
 	while ((after_time - now_time) <= temp)
 	{
-		usleep (10);
+		usleep (100);
 		check_time(&after_time);
 	}
 }
