@@ -12,7 +12,8 @@
 
 NAME = philo
 
-CC = gcc -Wall -Werror -Wextra
+CC = gcc -Wall -Werror -Wextra 
+# -g -fsanitize=thread
 
 FILE = time.c philosopher.c make_struct.c philo_utils.c
 
@@ -33,7 +34,7 @@ fclean :
 	make clean
 	rm -rf $(NAME)
 
-re : 
+re :
 	make fclean
 	make all
 
