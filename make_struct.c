@@ -6,7 +6,7 @@
 /*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:34 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/03 12:42:08 by youskim          ###   ########.fr       */
+/*   Updated: 2022/06/25 20:01:37 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,69 +35,80 @@ pthread_mutex_t	*make_fork(t_all *all)
 	return (fork);
 }
 
-int	make_philo(t_philo *p, int argc, char *argv[])
+int	make_philo(t_philo *p, int argc, char *argv[], t_all *all)
 {
 	int	i;
 	int	arg[5];
 
 	i = -1;
 	while (++i < argc - 1)
-	{
 		arg[i] = ft_atoi(argv[i + 1]);
-		if (arg[i] == -1)
-			return (1);
-	}
 	if (memset (p, 0, sizeof(t_philo) * arg[0]) == NULL)
 		return (1);
 	i = -1;
 	while (++i < arg[0])
 	{
 		p[i].num = i + 1;
-		check_time (&p[i].life_time);
+		pthread_mutex_lock (&(all->eating));
+		p[i].life_time = check_time ();
+		pthread_mutex_unlock (&(all->eating));
 		p[i].eat_time = arg[2];
 		p[i].sleep_time = arg[3];
 		p[i].left = (i + 1) % arg[0];
 		p[i].right = i;
 		p[i].eat_num = 0;
+		p[i].all = all;
 	}
 	return (0);
 }
 
-static void	*error_null(t_all *all)
+int	start_mutex(t_all *all)
 {
-	free (all);
-	return (NULL);
+	if (pthread_mutex_init (&(all->write), NULL) == -1)
+		return (error_free(all));
+	if (pthread_mutex_init (&(all->eating), NULL) == -1)
+		return (error_free(all));
+	return (0);
 }
 
-static void	*error_null_p(t_all *all, t_philo *p)
+int	check_argv(int argc, char *argv[])
 {
-	free (p);
-	free (all);
-	return (NULL);
+	int	i;
+
+	i = 0;
+	while (i < argc - 1)
+	{
+		if (ft_atoi(argv[i + 1]) <= 0)
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
-t_all	*make_all(int argc, char *argv[])
+int	make_all(t_all *all, int argc, char *argv[])
 {
-	t_all			*all;
 	t_philo			*p;
 
-	all = (t_all *)malloc(sizeof(t_all));
-	if (all == 0)
-		return (NULL);
-	memset (all, 0, sizeof(t_all));
-	check_time (&all->start);
+	if (check_argv(argc, argv) == 1)
+		return (-1);
+	if (memset (all, 0, sizeof(t_all)) == NULL)
+		return (-1);
+	all->start = check_time ();
 	all->philo_num = ft_atoi(argv[1]);
 	all->life = ft_atoi(argv[2]);
 	if (argc == 6)
 		all->eat_num = ft_atoi (argv[5]);
 	p = (t_philo *)malloc(sizeof(t_philo) * all->philo_num);
 	if (p == 0)
-		return (error_null(all));
-	if (make_philo(p, argc, argv) == 1)
-		return (error_null_p(all, p));
+		return (-1);
+	if (make_philo(p, argc, argv, all) == 1)
+		return (-1);
 	all->philo = p;
 	all->fork = make_fork(all);
 	if (all->fork == NULL)
-		return (error_null_p(all, p));
-	return (all);
+	{
+		free (all->philo);
+		return (-1);
+	}
+	return (0);
 }

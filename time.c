@@ -6,18 +6,20 @@
 /*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:57 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/03 12:53:09 by youskim          ###   ########.fr       */
+/*   Updated: 2022/06/25 20:57:58 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 
-void	check_time(double *time)
+double	check_time(void)
 {
 	struct timeval	now;
+	double			ret;
 
 	gettimeofday (&now, NULL);
-	*time = now.tv_sec + now.tv_usec * 0.000001;
+	ret = now.tv_sec + now.tv_usec * 0.000001;
+	return (ret);
 }
 
 void	ft_usleep(int spend_time)
@@ -26,13 +28,13 @@ void	ft_usleep(int spend_time)
 	double	after_time;
 	double	temp;
 
-	check_time (&now_time);
-	check_time (&after_time);
+	now_time = check_time ();
+	after_time = check_time ();
 	temp = spend_time * 0.001;
 	while ((after_time - now_time) <= temp)
 	{
-		usleep (100);
-		check_time(&after_time);
+		usleep (300);
+		after_time = check_time();
 	}
 }
 
@@ -40,7 +42,7 @@ void	printf_with_time(double start, int philo, char *str, t_all *all)
 {
 	double	now;
 
-	check_time (&now);
+	now = check_time ();
 	pthread_mutex_lock (&(all->write));
 	printf ("%d %d %s", (int)((now - start) * 1000), philo, str);
 	pthread_mutex_unlock (&(all->write));
@@ -50,6 +52,6 @@ void	printf_died(double start, int philo, char *str)
 {
 	double	now;
 
-	check_time (&now);
+	now = check_time ();
 	printf ("%d %d %s", (int)((now - start) * 1000), philo, str);
 }

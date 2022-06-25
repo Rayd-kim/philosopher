@@ -6,7 +6,7 @@
 /*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:49 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/11 14:30:56 by youskim          ###   ########.fr       */
+/*   Updated: 2022/06/25 21:38:28 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,20 @@
 
 static int	result_value(const char *str, int index, int sign)
 {
-	int	result;
+	unsigned long long int	result;
 
 	result = 0;
-	if (str[index] < '0' || str[index] > '9')
-		return (-1);
 	while (str[index] >= '0' && str[index] <= '9')
 	{
 		result = result * 10 + str[index] - '0';
 		index++;
 	}
-	return (result * sign);
+	if (result > 9223372036854775807 && sign == 1)
+		return (-1);
+	else if (result - 1 > 9223372036854775807 && sign == -1)
+		return (0);
+	else
+		return (result * sign);
 }
 
 int	ft_atoi(const char *str)
@@ -47,9 +50,7 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	if (pm_num > 1)
-		return (-1);
-	if (sign != 1)
-		return (-1);
+		return (0);
 	result = result_value(str, i, sign);
 	return (result);
 }
@@ -66,8 +67,8 @@ int	error_free_thread(t_all *all, int i)
 	while (++i < all->philo_num)
 		pthread_mutex_destroy (&all->fork[i]);
 	pthread_mutex_destroy (&(all->write));
+	pthread_mutex_destroy (&(all->eating));
 	free (all->fork);
-	free (all);
 	return (1);
 }
 
@@ -80,6 +81,21 @@ int	error_free(t_all *all)
 	while (++i < all->philo_num)
 		pthread_mutex_destroy (&all->fork[i]);
 	free (all->fork);
-	free (all);
 	return (1);
+}
+
+void	end_philo(t_all *all)
+{
+	int	i;
+
+	i = -1;
+	while (++i < all->philo_num)
+		pthread_detach (all->philo[i].tid);
+	free (all->philo);
+	i = -1;
+	while (++i < all->philo_num)
+		pthread_mutex_destroy (&all->fork[i]);
+	pthread_mutex_destroy (&(all->write));
+	pthread_mutex_destroy (&(all->eating));
+	free (all->fork);
 }
