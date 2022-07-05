@@ -6,7 +6,7 @@
 /*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:57 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/25 20:57:58 by youskim          ###   ########.fr       */
+/*   Updated: 2022/07/05 22:04:25 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	ft_usleep(int spend_time)
 	temp = spend_time * 0.001;
 	while ((after_time - now_time) <= temp)
 	{
-		usleep (300);
+		usleep (250);
 		after_time = check_time();
 	}
 }

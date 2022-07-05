@@ -6,7 +6,7 @@
 /*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:53 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/26 23:41:15 by youskim          ###   ########.fr       */
+/*   Updated: 2022/07/05 22:03:48 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,11 @@ void	philo_do(t_philo *philo)
 	printf_with_time (philo->all->start, philo->num, "has taken a fork\n", \
 	philo->all);
 	printf_with_time (philo->all->start, philo->num, "is eating\n", philo->all);
-	// pthread_mutex_lock (&(philo->all->eating));
-	// philo->eat_num += 1;
-	// if (philo->eat_num == philo->all->eat_num)
-	// 	philo->all->eat_check += 1;
-	// if (philo->all->eat_check == philo->all->philo_num)
-	// 	end_philo(philo->all);
-	// pthread_mutex_unlock (&(philo->all->eating));
-	ft_usleep (philo->eat_time);
 	pthread_mutex_lock (&(philo->all->eating));
 	philo->life_time = check_time ();
 	philo->eat_num += 1;
-	if (philo->eat_num == philo->all->eat_num)
-		philo->all->eat_check += 1;
-	if (philo->all->eat_check == philo->all->philo_num)
-		end_philo(philo->all);
 	pthread_mutex_unlock (&(philo->all->eating));
+	ft_usleep (philo->eat_time);
 	pthread_mutex_unlock (&(philo->all->fork[philo->right]));
 	pthread_mutex_unlock (&(philo->all->fork[philo->left]));
 }
@@ -63,13 +52,32 @@ void	*check_philo(void *data)
 	return (0);
 }
 
+void	eat_check(t_all *all)
+{
+	int	i;
+	int	eat;
+
+	i = 0;
+	eat = 0;
+	while (i < all->philo_num && all->eat_num != 0)
+	{
+		pthread_mutex_lock (&(all->eating));
+		if (all->philo[i].eat_num == all->eat_num)
+			eat++;
+		pthread_mutex_unlock (&(all->eating));
+		i++;
+	}
+	if (eat == all->philo_num)
+		all->eat_check = 1;
+}
+
 void	*death_check(void *data)
 {
 	t_all	*all;
 	int		i;
 
 	all = (t_all *)data;
-	while (all->eat_check != all->philo_num || all->eat_num == 0)
+	while (all->eat_check == 0 || all->eat_num == 0)
 	{
 		i = -1;
 		while (++i < all->philo_num)
@@ -86,7 +94,9 @@ void	*death_check(void *data)
 			}
 			pthread_mutex_unlock (&(all->eating));
 		}
+		eat_check(all);
 	}
+	end_philo(all);
 	return (0);
 }
 
