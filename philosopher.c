@@ -6,7 +6,7 @@
 /*   By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 15:13:53 by youskim           #+#    #+#             */
-/*   Updated: 2022/06/25 21:41:42 by youskim          ###   ########.fr       */
+/*   Updated: 2022/06/26 23:41:15 by youskim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,21 @@ void	philo_do(t_philo *philo)
 	printf_with_time (philo->all->start, philo->num, "has taken a fork\n", \
 	philo->all);
 	printf_with_time (philo->all->start, philo->num, "is eating\n", philo->all);
+	// pthread_mutex_lock (&(philo->all->eating));
+	// philo->eat_num += 1;
+	// if (philo->eat_num == philo->all->eat_num)
+	// 	philo->all->eat_check += 1;
+	// if (philo->all->eat_check == philo->all->philo_num)
+	// 	end_philo(philo->all);
+	// pthread_mutex_unlock (&(philo->all->eating));
+	ft_usleep (philo->eat_time);
 	pthread_mutex_lock (&(philo->all->eating));
+	philo->life_time = check_time ();
 	philo->eat_num += 1;
 	if (philo->eat_num == philo->all->eat_num)
 		philo->all->eat_check += 1;
 	if (philo->all->eat_check == philo->all->philo_num)
 		end_philo(philo->all);
-	pthread_mutex_unlock (&(philo->all->eating));
-	ft_usleep (philo->eat_time);
-	pthread_mutex_lock (&(philo->all->eating));
-	philo->life_time = check_time ();
 	pthread_mutex_unlock (&(philo->all->eating));
 	pthread_mutex_unlock (&(philo->all->fork[philo->right]));
 	pthread_mutex_unlock (&(philo->all->fork[philo->left]));

@@ -6,14 +6,14 @@
 #    By: youskim <youskim@student.42seoul.kr>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/02 15:27:06 by youskim           #+#    #+#              #
-#    Updated: 2022/06/25 20:08:57 by youskim          ###   ########.fr        #
+#    Updated: 2022/07/05 13:24:40 by youskim          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-CC = gcc -Wall -Werror -Wextra
-#  -g -fsanitize=thread
+CC = gcc -Wall -Werror -Wextra 
+# -g -fsanitize=thread
 
 FILE = time.c philosopher.c make_struct.c philo_utils.c
 
